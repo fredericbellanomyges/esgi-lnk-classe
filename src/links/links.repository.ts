@@ -57,7 +57,6 @@ export function createLinksRepository(pool: Pool) {
       return row ? toLink(row) : undefined;
     },
 
-<<<<<<< HEAD
     async logRedirect(code: string, userAgent: string | null): Promise<void> {
       await pool.query(
         'INSERT INTO redirect_log (code, user_agent) VALUES ($1, $2)',
@@ -65,7 +64,6 @@ export function createLinksRepository(pool: Pool) {
       );
     },
 
-=======
     // Un seul clic unique par visiteur (IP) et par jour.
     async recordUniqueClick(code: string, ip: string): Promise<void> {
       await pool.query(
@@ -83,7 +81,27 @@ export function createLinksRepository(pool: Pool) {
       return result.rows[0]?.count ?? 0;
     },
 
->>>>>>> 9a26e40285d8f15780e70153dc680bacaecba8cb
+    async recordClick(code: string): Promise<void> {
+      await pool.query(
+        'INSERT INTO click_events (code) VALUES ($1)',
+        [code],
+      );
+    },
+
+    async clicksByDay(code: string): Promise<{ day: string; clicks: number }[]> {
+      // Regroupe par jour UTC, du plus ancien au plus récent, day au format YYYY-MM-DD
+      const result = await pool.query<{ day: string; clicks: number }>(
+        `SELECT to_char(clicked_at AT TIME ZONE 'UTC', 'YYYY-MM-DD') AS day,
+                count(*)::int AS clicks
+         FROM click_events
+         WHERE code = $1
+         GROUP BY day
+         ORDER BY day ASC`,
+        [code],
+      );
+      return result.rows;
+    },
+
     async incrementClicks(code: string): Promise<void> {
       await pool.query('UPDATE links SET clicks = clicks + 1 WHERE code = $1', [code]);
     },

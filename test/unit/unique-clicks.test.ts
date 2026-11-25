@@ -30,6 +30,9 @@ function buildApp() {
       recorded.push({ code, ip });
     },
     countUniqueClicks: async () => 2,
+    logRedirect: async () => {},
+    recordClick: async () => {},
+    clicksByDay: async () => [],
   } as unknown as LinksRepository;
   const app = Fastify();
   linksRoutes(app, config, repository);

@@ -43,12 +43,13 @@ describe('GET /links/:code/stats', () => {
 
   it('renvoie l’URL, les clics et les dates', async () => {
     const response = await app.inject({ method: 'GET', url: `/links/${CODE}/stats`, headers: auth });
-    const body = response.json<{ url: string; clicks: number; createdAt: string; expiresAt: string }>();
+    const body = response.json<{ url: string; clicks: number; createdAt: string; expiresAt: string; clicksByDay : { day: string; clicks: number }[] }>();
 
     expect(response.statusCode).toBe(200);
     expect(body.url).toBe('https://example.com/stats');
     expect(body.clicks).toBe(3);
     expect(new Date(body.createdAt).getTime()).not.toBeNaN();
     expect(new Date(body.expiresAt).getTime()).toBeGreaterThan(Date.now());
+    expect(body.clicksByDay).toEqual([]);
   });
 });

@@ -2,12 +2,6 @@ import type { Pool } from 'pg';
 
 export async function migrate(pool: Pool): Promise<void> {
   await pool.query(`
-    CREATE TABLE IF NOT EXISTS redirect_log (
-      code       TEXT NOT NULL,
-      at         TIMESTAMPTZ NOT NULL DEFAULT now(),
-      user_agent TEXT
-    );
-
     CREATE TABLE IF NOT EXISTS unique_clicks (
       code  TEXT NOT NULL,
       ip    TEXT NOT NULL,

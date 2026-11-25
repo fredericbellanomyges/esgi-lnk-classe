@@ -57,13 +57,6 @@ export function createLinksRepository(pool: Pool) {
       return row ? toLink(row) : undefined;
     },
 
-    async logRedirect(code: string, userAgent: string | null): Promise<void> {
-      await pool.query(
-        'INSERT INTO redirect_log (code, user_agent) VALUES ($1, $2)',
-        [code, userAgent],
-      );
-    },
-
     // Un seul clic unique par visiteur (IP) et par jour.
     async recordUniqueClick(code: string, ip: string): Promise<void> {
       await pool.query(

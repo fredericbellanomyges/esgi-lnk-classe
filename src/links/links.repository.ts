@@ -57,6 +57,13 @@ export function createLinksRepository(pool: Pool) {
       return row ? toLink(row) : undefined;
     },
 
+    async logRedirect(code: string, userAgent: string | null): Promise<void> {
+      await pool.query(
+        'INSERT INTO redirect_log (code, user_agent) VALUES ($1, $2)',
+        [code, userAgent],
+      );
+    },
+
     async incrementClicks(code: string): Promise<void> {
       await pool.query('UPDATE links SET clicks = clicks + 1 WHERE code = $1', [code]);
     },

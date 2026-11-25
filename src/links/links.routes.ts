@@ -46,6 +46,7 @@ export function linksRoutes(app: FastifyInstance, config: Config, repository: Li
       return reply.code(410).send({ error: 'Lien expiré' });
     }
     await repository.incrementClicks(link.code);
+    await repository.logRedirect(link.code, request.headers['user-agent'] ?? null);
     return reply.redirect(link.url, 302);
   });
 

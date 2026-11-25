@@ -1,5 +1,5 @@
 import type { Pool } from 'pg';
-import { generateShortCode } from './short-code.js';
+import { createShortCode } from './short-code.js';
 
 export interface Link {
   code: string;
@@ -35,7 +35,7 @@ export function createLinksRepository(pool: Pool) {
     async create(
       url: string,
       expiresAt: Date,
-      generate: () => string = generateShortCode,
+      generate: () => string = createShortCode,
     ): Promise<string> {
       for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
         const code = generate();

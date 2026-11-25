@@ -27,4 +27,12 @@ describe('isAllowedUrl', () => {
   it('refuse une chaîne vide', () => {
     expect(isAllowedUrl('', OWN_HOST)).toBe(false);
   });
+
+  it('refuse une URL avec identifiant et mot de passe', () => {
+    expect(isAllowedUrl('https://user:pass@example.com/page', OWN_HOST)).toBe(false);
+  });
+
+  it('refuse une URL avec identifiant seul', () => {
+    expect(isAllowedUrl('https://user@example.com/page', OWN_HOST)).toBe(false);
+  });
 });

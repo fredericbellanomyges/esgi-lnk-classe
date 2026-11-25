@@ -11,6 +11,9 @@ export function isAllowedUrl(url: string, ownHost: string): boolean {
   if (!ALLOWED_PROTOCOLS.includes(parsed.protocol)) {
     return false;
   }
+  if (parsed.username !== '' || parsed.password !== '') {
+    return false;
+  }
   // Raccourcir un lien ESGI.lnk créerait une boucle de redirection.
   return parsed.host.toLowerCase() !== ownHost.toLowerCase();
 }

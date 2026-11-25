@@ -9,6 +9,7 @@ ESGI.lnk transforme une URL longue en lien court, redirige et compte les clics.
 | `POST` | `/links` | Crée un lien. Corps : `{ "url": "https://…", "expiresInDays"?: number }`. Répond `201` avec `{ code, shortUrl, expiresAt }`. |
 | `GET` | `/r/:code` | Redirige (`302`) vers l'URL d'origine et incrémente le compteur. `404` si inconnu, `410` si expiré. |
 | `GET` | `/links/:code/stats` | `{ url, clicks, createdAt, expiresAt }`. Protégé par l'en-tête `Authorization: Bearer <ADMIN_TOKEN>`. |
+| `GET` | `/links/:code` | Aperçu sans redirection : `{ url, expiresAt }`. Ne compte pas de clic. `404` si inconnu. |
 | `GET` | `/health` | `{ status: "ok", version, db: "up" }`. |
 
 ## Règles métier

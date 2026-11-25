@@ -8,24 +8,24 @@ function sequence(...values: number[]): () => number {
 }
 
 describe('generateShortCode', () => {
-  it('produit 6 caractères', () => {
-    expect(generateShortCode()).toHaveLength(6);
+  it('produit 7 caractères', () => {
+    expect(generateShortCode()).toHaveLength(7);
   });
 
   it('produit uniquement des caractères alphanumériques', () => {
-    expect(generateShortCode()).toMatch(/^[A-Za-z0-9]{6}$/);
+    expect(generateShortCode()).toMatch(/^[A-Za-z0-9]{7}$/);
   });
 
   it('utilise le générateur injecté', () => {
-    expect(generateShortCode(() => 0)).toBe('AAAAAA');
+    expect(generateShortCode(() => 0)).toBe('AAAAAAA');
   });
 
   it('peut produire des majuscules, des minuscules et des chiffres', () => {
     const code = generateShortCode(sequence(0, 26 / 62, 52 / 62));
-    expect(code).toBe('Aa0Aa0');
+    expect(code).toBe('Aa0Aa0A');
   });
 
   it('reste dans l’alphabet pour la valeur limite du générateur', () => {
-    expect(generateShortCode(() => 0.999999)).toBe('999999');
+    expect(generateShortCode(() => 0.999999)).toBe('9999999');
   });
 });

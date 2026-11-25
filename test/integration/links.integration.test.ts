@@ -29,7 +29,7 @@ describe('POST /links', () => {
     createdCodes.push(body.code);
 
     expect(response.statusCode).toBe(201);
-    expect(body.code).toMatch(/^[A-Za-z0-9]{6}$/);
+    expect(body.code).toMatch(/^[A-Za-z0-9]{7}$/);
     expect(body.shortUrl).toBe(`http://esgi-lnk.test/r/${body.code}`);
     expect(new Date(body.expiresAt).getTime()).toBeGreaterThan(Date.now());
   });

@@ -27,4 +27,14 @@ describe('isAllowedUrl', () => {
   it('refuse une chaîne vide', () => {
     expect(isAllowedUrl('', OWN_HOST)).toBe(false);
   });
+
+  it('refuse une URL de plus de 2000 caractères', () => {
+    const longUrl = 'https://example.com/' + 'a'.repeat(2000);
+    expect(isAllowedUrl(longUrl, OWN_HOST)).toBe(false);
+  });
+
+  it('accepte une URL de 2000 caractères', () => {
+    const longUrl = 'https://example.com/' + 'a'.repeat(1980);
+    expect(isAllowedUrl(longUrl, OWN_HOST)).toBe(true);
+  });
 });

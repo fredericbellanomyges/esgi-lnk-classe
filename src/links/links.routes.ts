@@ -49,7 +49,7 @@ export function linksRoutes(app: FastifyInstance, config: Config, repository: Li
     return reply.redirect(link.url, 302);
   });
 
-  app.get<{ Params: { code: string } }>('/links/:code/stats', async (request, reply) => {
+  app.get<{ Params: { code: string } }>('/links/:code/statistics', async (request, reply) => {
     if (request.headers.authorization !== `Bearer ${config.adminToken}`) {
       return reply.code(401).send({ error: 'Non autorisé' });
     }

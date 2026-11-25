@@ -20,7 +20,7 @@ afterAll(async () => {
 
 describe('GET /links/:code/stats', () => {
   it('répond 401 sans token', async () => {
-    const response = await app.inject({ method: 'GET', url: `/links/${CODE}/stats` });
+    const response = await app.inject({ method: 'GET', url: `/links/zzzzzz/stats` });
 
     expect(response.statusCode).toBe(401);
   });
@@ -28,7 +28,7 @@ describe('GET /links/:code/stats', () => {
   it('répond 401 avec un mauvais token', async () => {
     const response = await app.inject({
       method: 'GET',
-      url: `/links/${CODE}/stats`,
+      url: `/links/zzzzzz/stats`,
       headers: { authorization: 'Bearer mauvais-token' },
     });
 
@@ -42,7 +42,7 @@ describe('GET /links/:code/stats', () => {
   });
 
   it('renvoie l’URL, les clics et les dates', async () => {
-    const response = await app.inject({ method: 'GET', url: `/links/${CODE}/stats`, headers: auth });
+    const response = await app.inject({ method: 'GET', url: `/links/zzzzzz/stats`, headers: auth });
     const body = response.json<{ url: string; clicks: number; createdAt: string; expiresAt: string }>();
 
     expect(response.statusCode).toBe(200);

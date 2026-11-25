@@ -50,6 +50,18 @@ export function linksRoutes(app: FastifyInstance, config: Config, repository: Li
     return reply.redirect(link.url, 302);
   });
 
+  // Aperçu : renvoie la cible sans rediriger ni compter de clic.
+  app.get<{ Params: { code: string } }>('/links/:code', async (request, reply) => {
+    const link = await repository.findByCode(request.params.code);
+    if (!link) {
+      return reply.code(404).send({ error: 'Lien inconnu' });
+    }
+    return {
+      url: link.url,
+      expiresAt: link.expiresAt.toISOString(),
+    };
+  });
+
   app.get<{ Params: { code: string } }>('/links/:code/stats', async (request, reply) => {
     if (request.headers.authorization !== `Bearer ${config.adminToken}`) {
       return reply.code(401).send({ error: 'Non autorisé' });

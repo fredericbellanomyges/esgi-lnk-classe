@@ -57,6 +57,28 @@ export function createLinksRepository(pool: Pool) {
       return row ? toLink(row) : undefined;
     },
 
+
+    async recordClick(code: string): Promise<void> {
+      await pool.query(
+        'INSERT INTO click_events (code) VALUES ($1)',
+        [code],
+      );
+    },
+
+    async clicksByDay(code: string): Promise<{ day: string; clicks: number }[]> {
+      // Regroupe par jour UTC, du plus ancien au plus récent, day au format YYYY-MM-DD
+      const result = await pool.query<{ day: string; clicks: number }>(
+        `SELECT to_char(clicked_at AT TIME ZONE 'UTC', 'YYYY-MM-DD') AS day,
+                count(*)::int AS clicks
+         FROM click_events
+         WHERE code = $1
+         GROUP BY day
+         ORDER BY day ASC`,
+        [code],
+      );
+      return result.rows;
+    },
+
     async incrementClicks(code: string): Promise<void> {
       await pool.query('UPDATE links SET clicks = clicks + 1 WHERE code = $1', [code]);
     },

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { generateShortCode } from '../../src/links/short-code.js';
+import { createShortCode } from '../../src/links/short-code.js';
 
 // Générateur déterministe : renvoie les valeurs données, en boucle.
 function sequence(...values: number[]): () => number {

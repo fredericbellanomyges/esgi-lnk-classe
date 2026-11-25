@@ -1,5 +1,5 @@
 import type { Pool } from 'pg';
-import { generateShortCode } from './short-code.js';
+import { createShortCode } from './short-code.js';
 
 export interface Link {
   code: string;
@@ -35,7 +35,7 @@ export function createLinksRepository(pool: Pool) {
     async create(
       url: string,
       expiresAt: Date,
-      generate: () => string = generateShortCode,
+      generate: () => string = createShortCode,
     ): Promise<string> {
       for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
         const code = generate();
@@ -57,15 +57,6 @@ export function createLinksRepository(pool: Pool) {
       return row ? toLink(row) : undefined;
     },
 
-<<<<<<< HEAD
-    async logRedirect(code: string, userAgent: string | null): Promise<void> {
-      await pool.query(
-        'INSERT INTO redirect_log (code, user_agent) VALUES ($1, $2)',
-        [code, userAgent],
-      );
-    },
-
-=======
     // Un seul clic unique par visiteur (IP) et par jour.
     async recordUniqueClick(code: string, ip: string): Promise<void> {
       await pool.query(
@@ -83,7 +74,6 @@ export function createLinksRepository(pool: Pool) {
       return result.rows[0]?.count ?? 0;
     },
 
->>>>>>> 9a26e40285d8f15780e70153dc680bacaecba8cb
     async incrementClicks(code: string): Promise<void> {
       await pool.query('UPDATE links SET clicks = clicks + 1 WHERE code = $1', [code]);
     },

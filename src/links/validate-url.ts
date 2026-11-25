@@ -1,5 +1,5 @@
-const ALLOWED_PROTOCOLS = ['http:', 'https:'];
-
+const ALLOWED_PROTOCOLS = ["http:", "https:"];
+const MAX_URL_LENGTH = 2000;
 // `ownHost` (ex. « localhost:3000 ») : le domaine d'ESGI.lnk lui-même.
 export function isAllowedUrl(url: string, ownHost: string): boolean {
   let parsed: URL;
@@ -11,7 +11,10 @@ export function isAllowedUrl(url: string, ownHost: string): boolean {
   if (!ALLOWED_PROTOCOLS.includes(parsed.protocol)) {
     return false;
   }
-  if (parsed.username !== '' || parsed.password !== '') {
+  if (url.length > MAX_URL_LENGTH) {
+    return false;
+  }
+  if (parsed.username !== "" || parsed.password !== "") {
     return false;
   }
   // Raccourcir un lien ESGI.lnk créerait une boucle de redirection.

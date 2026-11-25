@@ -57,6 +57,33 @@ export function createLinksRepository(pool: Pool) {
       return row ? toLink(row) : undefined;
     },
 
+<<<<<<< HEAD
+    async logRedirect(code: string, userAgent: string | null): Promise<void> {
+      await pool.query(
+        'INSERT INTO redirect_log (code, user_agent) VALUES ($1, $2)',
+        [code, userAgent],
+      );
+    },
+
+=======
+    // Un seul clic unique par visiteur (IP) et par jour.
+    async recordUniqueClick(code: string, ip: string): Promise<void> {
+      await pool.query(
+        `INSERT INTO unique_clicks (code, ip) VALUES ($1, $2)
+         ON CONFLICT DO NOTHING`,
+        [code, ip],
+      );
+    },
+
+    async countUniqueClicks(code: string): Promise<number> {
+      const result = await pool.query<{ count: number }>(
+        'SELECT count(*)::int AS count FROM unique_clicks WHERE code = $1',
+        [code],
+      );
+      return result.rows[0]?.count ?? 0;
+    },
+
+>>>>>>> 9a26e40285d8f15780e70153dc680bacaecba8cb
     async incrementClicks(code: string): Promise<void> {
       await pool.query('UPDATE links SET clicks = clicks + 1 WHERE code = $1', [code]);
     },

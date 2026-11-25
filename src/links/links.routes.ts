@@ -46,6 +46,7 @@ export function linksRoutes(app: FastifyInstance, config: Config, repository: Li
       return reply.code(410).send({ error: 'Lien expiré' });
     }
     await repository.incrementClicks(link.code);
+    await repository.recordUniqueClick(link.code, request.ip);
     return reply.redirect(link.url, 302);
   });
 
@@ -57,7 +58,9 @@ export function linksRoutes(app: FastifyInstance, config: Config, repository: Li
     if (!link) {
       return reply.code(404).send({ error: 'Lien inconnu' });
     }
+    const uniqueClicks = await repository.countUniqueClicks(link.code);
     return {
+      uniqueClicks,
       url: link.url,
       clicks: link.clicks,
       createdAt: link.createdAt.toISOString(),

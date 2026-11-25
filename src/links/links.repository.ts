@@ -57,6 +57,23 @@ export function createLinksRepository(pool: Pool) {
       return row ? toLink(row) : undefined;
     },
 
+    // Un seul clic unique par visiteur (IP) et par jour.
+    async recordUniqueClick(code: string, ip: string): Promise<void> {
+      await pool.query(
+        `INSERT INTO unique_clicks (code, ip) VALUES ($1, $2)
+         ON CONFLICT DO NOTHING`,
+        [code, ip],
+      );
+    },
+
+    async countUniqueClicks(code: string): Promise<number> {
+      const result = await pool.query<{ count: number }>(
+        'SELECT count(*)::int AS count FROM unique_clicks WHERE code = $1',
+        [code],
+      );
+      return result.rows[0]?.count ?? 0;
+    },
+
     async incrementClicks(code: string): Promise<void> {
       await pool.query('UPDATE links SET clicks = clicks + 1 WHERE code = $1', [code]);
     },

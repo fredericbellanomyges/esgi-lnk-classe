@@ -2,6 +2,14 @@ import type { Pool } from 'pg';
 
 export async function migrate(pool: Pool): Promise<void> {
   await pool.query(`
+    CREATE TABLE IF NOT EXISTS unique_clicks (
+      code  TEXT NOT NULL,
+      ip    TEXT NOT NULL,
+      day   DATE NOT NULL DEFAULT current_date,
+      PRIMARY KEY (code, ip, day)
+    )
+  `);
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS links (
       code        TEXT PRIMARY KEY,
       url         TEXT NOT NULL,
